@@ -12,11 +12,11 @@ class TestEntry < Test::Unit::TestCase
 			assert_equal 'cn=Barbara,o=corp', @entry.dn
 		end
 
-		should 'return an empty array when accessing a non-existant attribute (index lookup)' do
+		should 'return an empty array when accessing a nonexistent attribute (index lookup)' do
 			assert_equal [], @entry['sn']
 		end
 
-		should 'return an empty array when accessing a non-existant attribute (method call)' do
+		should 'return an empty array when accessing a nonexistent attribute (method call)' do
 			assert_equal [], @entry.sn
 		end
 

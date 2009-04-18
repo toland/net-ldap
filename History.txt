@@ -44,7 +44,7 @@
   * 04Sep07, Changed four error classes to inherit from StandardError rather
     Exception, in order to be friendlier to irb. Suggested by Kouhei.
   * Ensure connections are closed. Thanks to Kristian Meier.
-  * An LDAP::Entry should return an empty array when accessing a non-existent
+  * An LDAP::Entry should return an empty array when accessing a nonexistent
     attribute via a method call. Mirrors index lookup behaviour.
   * Minor bug fixes here and there.
 
