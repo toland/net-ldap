@@ -9,9 +9,9 @@ $LOAD_PATH.unshift( "#{File.dirname(__FILE__)}/lib" )
 # Pull in local 'net/ldap' as opposed to an installed version.
 require 'net/ldap'
 
-Hoe.new('ruby-net-ldap', Net::LDAP::VERSION) do |p|
-	p.developer('Francis Cianfrocca', 'garbagecat10@gmail.com')
-	p.developer('Emiel van de Laar', 'gemiel@gmail.com')
+Hoe.spec 'ruby-net-ldap' do
+	developer 'Emiel van de Laar', 'gemiel@gmail.com'
+	developer 'Francis Cianfrocca', 'garbagecat10@gmail.com'
 end
 
-# vim: syntax=Ruby
+# vim: syntax=ruby
