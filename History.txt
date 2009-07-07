@@ -6,7 +6,6 @@
   * Added [preliminary (still undocumented) support for SASL authentication.
   * Supported several constructs from the server side of the LDAP protocol.
   * Added a "consuming" String#read_ber! method.
-  * Added some support for SNMP data-handling.
   * Belatedly added a patch contributed by Kouhei Sutou last October.
     The patch adds start_tls support.
   * Added Net::LDAP#search_subschema_entry
