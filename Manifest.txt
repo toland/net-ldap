@@ -4,7 +4,6 @@ LICENSE
 Manifest.txt
 README.txt
 Rakefile
-Release-Announcement
 lib/net/ber.rb
 lib/net/ldap.rb
 lib/net/ldap/dataset.rb
