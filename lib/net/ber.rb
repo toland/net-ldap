@@ -165,7 +165,15 @@ module Net
         [1 + (n & 127), j]
       end
 
-      newobj = read contentlength
+      # Read 'value'... 
+      newobj = "" # Buffer to collect 'value' data. 
+      length = contentlength 
+ 
+      while ( length > 0 ) # There is more to read. 
+        data = read( length ) 
+        length -= data.length 
+        newobj << data 
+      end 
 
       # This exceptionally clever and clear bit of code is verrrry slow.
       objtype = (syntax && syntax[id]) || BuiltinSyntax[id]
