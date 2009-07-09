@@ -15,7 +15,6 @@
 # See Net::LDAP for documentation and usage samples.
 #
 
-
 require 'socket'
 require 'ostruct'
 
@@ -32,24 +31,22 @@ require 'net/ldap/dataset'
 require 'net/ldap/psw'
 require 'net/ldap/entry'
 
-
 module Net
 
 
   # == Net::LDAP
   #
-  # This library provides a pure-Ruby implementation of the
-  # LDAP client protocol, per RFC-2251.
-  # It can be used to access any server which implements the
-  # LDAP protocol.
+  # This library provides a pure-Ruby implementation of the LDAP client
+  # protocol, per RFC-2251.  It can be used to access any server which
+  # implements the LDAP protocol.
   #
-  # Net::LDAP is intended to provide full LDAP functionality
-  # while hiding the more arcane aspects
-  # the LDAP protocol itself, and thus presenting as Ruby-like
-  # a programming interface as possible.
+  # Net::LDAP is intended to provide full LDAP functionality while
+  # hiding the more arcane aspects the LDAP protocol itself, and thus
+  # presenting as Ruby-like a programming interface as possible.
   # 
   # == Quick-start for the Impatient
-  # === Quick Example of a user-authentication against an LDAP directory:
+  #
+  # === Quick example of user authentication against an LDAP directory:
   #
   #  require 'rubygems'
   #  require 'net/ldap'
@@ -64,8 +61,28 @@ module Net
   #    # authentication failed
   #  end
   #
+  # === Quick example of user authentication against an LDAP directory using SSL:
   #
-  # === Quick Example of a search against an LDAP directory:
+  #  require 'rubygems'
+  #  require 'net/ldap'
+  #
+  #  ldap = Net::LDAP.new
+  #       :host => server_ip_address,
+  #       :port => 636,
+  #       :encryption => { :method => :simple_tls },
+  #       :auth => {
+  #             :method => :simple,
+  #             :username => "cn=manager,dc=example,dc=com",
+  #             :password => "opensesame"
+  #       }
+  #  
+  #  if ldap.bind
+  #    # authentication succeeded
+  #  else
+  #    # authentication failed
+  #  end
+  #
+  # === Quick example of a search against an LDAP directory:
   #
   #  require 'rubygems'
   #  require 'net/ldap'
@@ -133,7 +150,6 @@ module Net
   # a set of criteria that you supply.
   #
   # === Attributes
-  #
   # In the LDAP view of the world, a DN uniquely identifies an entity.
   # Information about the entity is stored as a set of <i>Attributes.</i>
   # An attribute is a text string which is associated with zero or more
@@ -153,7 +169,6 @@ module Net
   # predates the invention of the term <i>email.</i>) <tt>mail</tt> differs
   # from <tt>sn</tt> in that most directories permit any number of values for the
   # <tt>mail</tt> attribute, including zero.
-  #
   #
   # === Tree-Base
   # We said above that X.400 Distinguished Names are <i>globally unique.</i>
@@ -258,7 +273,6 @@ module Net
   # to the server and then keeps it open while it executes a user-supplied block. Net::LDAP#open
   # closes the connection on completion of the block.
   #
-
   class LDAP
 
     class LdapError < StandardError; end
