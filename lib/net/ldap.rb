@@ -67,14 +67,14 @@ module Net
   #  require 'net/ldap'
   #
   #  ldap = Net::LDAP.new
-  #       :host => server_ip_address,
-  #       :port => 636,
-  #       :encryption => { :method => :simple_tls },
-  #       :auth => {
-  #             :method => :simple,
-  #             :username => "cn=manager,dc=example,dc=com",
-  #             :password => "opensesame"
-  #       }
+  #    :host => server_ip_address,
+  #    :port => 636,
+  #    :encryption => { :method => :simple_tls },
+  #    :auth => {
+  #      :method => :simple,
+  #      :username => "cn=manager,dc=example,dc=com",
+  #      :password => "opensesame"
+  #    }
   #  
   #  if ldap.bind
   #    # authentication succeeded
@@ -88,12 +88,12 @@ module Net
   #  require 'net/ldap'
   #  
   #  ldap = Net::LDAP.new :host => server_ip_address,
-  #       :port => 389,
-  #       :auth => {
-  #             :method => :simple,
-  #             :username => "cn=manager,dc=example,dc=com",
-  #             :password => "opensesame"
-  #       }
+  #    :port => 389,
+  #    :auth => {
+  #      :method => :simple,
+  #      :username => "cn=manager,dc=example,dc=com",
+  #      :password => "opensesame"
+  #    }
   #
   #  filter = Net::LDAP::Filter.eq( "cn", "George*" )
   #  treebase = "dc=example,dc=com"
@@ -109,7 +109,6 @@ module Net
   #  end
   #  
   #  p ldap.get_operation_result
-  #  
   #
   # == A Brief Introduction to LDAP
   #
@@ -132,7 +131,6 @@ module Net
   # but also very often about such items as printers, computers, and other
   # resources. To reflect this, LDAP uses the term <i>entity,</i> or less
   # commonly, <i>principal,</i> to denote its basic data-storage unit.
-  # 
   #
   # === Distinguished Names
   # In LDAP's view of the world,
@@ -1555,7 +1553,7 @@ module Net
       @conn.write pkt
 
       (be = @conn.read_ber(AsnSyntax)) && (pdu = LdapPdu.new( be )) && (pdu.app_tag == 7) or raise LdapError.new( "response missing or invalid" )
-      pdu.result
+      pdu.result_code
     end
 
 
@@ -1579,7 +1577,7 @@ module Net
       @conn.write pkt
 
       (be = @conn.read_ber(AsnSyntax)) && (pdu = LdapPdu.new( be )) && (pdu.app_tag == 9) or raise LdapError.new( "response missing or invalid" )
-      pdu.result
+      pdu.result_code
     end
 
 
