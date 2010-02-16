@@ -145,16 +145,15 @@ module Net
     # of this one.
     #
     def read_ber syntax=nil
-      # don't bother with this line, since IO#getbyte by definition returns nil on eof.
-      #return nil if eof?
+      return nil if eof?
 
-      id = getbyte or return nil  # don't trash this value, we'll use it later
+      id = gets.bytes.next # don't trash this value, we'll use it later
       #tag = id & 31
       #tag < 31 or raise BerError.new( "unsupported tag encoding: #{id}" )
       #tagclass = TagClasses[ id >> 6 ]
       #encoding = (id & 0x20 != 0) ? :constructed : :primitive
 
-      n = getbyte
+      n = getc.bytes.next
       lengthlength,contentlength = if n <= 127
         [1,n]
       else
