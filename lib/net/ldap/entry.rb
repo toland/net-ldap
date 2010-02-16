@@ -24,10 +24,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 #---------------------------------------------------------------------------
+#
+
 
 require 'base64'
 
-module Net; class LDAP
+
+module Net
+class LDAP
+
 
   # Objects of this class represent individual entries in an LDAP
   # directory. User code generally does not instantiate this class.
@@ -73,29 +78,20 @@ module Net; class LDAP
   # at least three places. Should do it in ONE place.
   class Entry
 
+
     # This constructor is not generally called by user code.
     #--
-    # Originally, attributes took a block so we wouldn't have to
+    # Originally, myhash took a block so we wouldn't have to
     # make sure its elements returned empty arrays when necessary.
     # Got rid of that to enable marshalling of Entry objects,
     # but that doesn't work anyway, because Entry objects have
     # singleton methods. So we define a custom dump and load.
-    def initialize( dn = nil ) # :nodoc:
-      @attributes = {} # originally: Hash.new {|k,v| k[v] = [] }
-      @attributes[:dn] = [dn]
+    def initialize dn = nil # :nodoc:
+      @myhash = {} # originally: Hash.new {|k,v| k[v] = [] }
+      @myhash[:dn] = [dn]
     end
 
-    def attributes
-      @attributes
-    end
-
-    protected :attributes
-
-    def ==( other )
-      self.attributes == other.attributes
-    end
-
-    def _dump( depth )
+    def _dump depth
       to_ldif
     end
 
@@ -108,20 +104,21 @@ module Net; class LDAP
     #--
     # Discovered bug, 26Aug06: I noticed that we're not converting the
     # incoming value to an array if it isn't already one.
-    def []=( name, value ) # :nodoc:
+    def []= name, value # :nodoc:
       sym = name.to_s.downcase.intern
       value = [value] unless value.is_a?(Array)
-      @attributes[sym] = value
+      @myhash[sym] = value
     end
+
 
     #--
     # We have to deal with this one as we do with []=
     # because this one and not the other one gets called
     # in formulations like entry["CN"] << cn.
     #
-    def []( name ) # :nodoc:
+    def [] name # :nodoc:
       name = name.to_s.downcase.intern unless name.is_a?(Symbol)
-      @attributes[name] || @attributes[name] = []
+      @myhash[name] || []
     end
 
     # Returns the dn of the Entry as a String.
@@ -131,7 +128,7 @@ module Net; class LDAP
 
     # Returns an array of the attribute names present in the Entry.
     def attribute_names
-      @attributes.keys
+      @myhash.keys
     end
 
     # Accesses each of the attributes present in the Entry.
@@ -142,14 +139,16 @@ module Net; class LDAP
     #
     def each
       if block_given?
-        attribute_names.each do |a|
+        attribute_names.each {|a|
           attr_name,values = a,self[a]
           yield attr_name, values
-        end
+        }
       end
     end
 
     alias_method :each_attribute, :each
+
+
 
     # Converts the Entry to a String, representing the
     # Entry's attributes in LDIF format.
@@ -226,18 +225,21 @@ module Net; class LDAP
     #
     def method_missing *args, &block # :nodoc:
       s = args[0].to_s.downcase.intern
-      if s.to_s[-1] == 61 and s.to_s.length > 1
+      if attribute_names.include?(s)
+        self[s]
+      elsif s.to_s[-1] == 61 and s.to_s.length > 1
         value = args[1] or raise RuntimeError.new( "unable to set value" )
         value = [value] unless value.is_a?(Array)
         name = s.to_s[0..-2].intern
         self[name] = value
       else
-        self[s]
+        raise NoMethodError.new( "undefined method '#{s}'" )
       end
     end
 
     def write
     end
+
 
     #--
     # Internal convenience method. It seems like the standard
@@ -246,8 +248,7 @@ module Net; class LDAP
     # it's a password. But that turns out to be not nearly good
     # enough. There are plenty of A/D attributes that are binary
     # in the middle. This is probably a nasty performance killer.
-		#
-    def is_attribute_value_binary?( value )
+    def is_attribute_value_binary? value
       v = value.to_s
       v.each_byte {|byt|
         return true if (byt < 32) || (byt > 126)
@@ -257,9 +258,12 @@ module Net; class LDAP
       end
       false
     end
-
     private :is_attribute_value_binary?
 
   end # class Entry
 
-end; end # class Net::LDAP
+
+end # class LDAP
+end # module Net
+
+

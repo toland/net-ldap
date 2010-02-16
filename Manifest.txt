@@ -4,6 +4,7 @@ LICENSE
 Manifest.txt
 README.txt
 Rakefile
+Release-Announcement
 lib/net/ber.rb
 lib/net/ldap.rb
 lib/net/ldap/dataset.rb
@@ -12,6 +13,7 @@ lib/net/ldap/filter.rb
 lib/net/ldap/pdu.rb
 lib/net/ldap/psw.rb
 lib/net/ldif.rb
+lib/net/snmp.rb
 pre-setup.rb
 setup.rb
 test/common.rb
@@ -20,6 +22,7 @@ test/test_entry.rb
 test/test_filter.rb
 test/test_ldif.rb
 test/test_password.rb
+test/test_snmp.rb
 test/testdata.ldif
 tests/NOTICE.txt
 tests/testldap.rb

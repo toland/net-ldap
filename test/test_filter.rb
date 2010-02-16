@@ -15,7 +15,6 @@ class TestFilter < Test::Unit::TestCase
 		Net::LDAP::Filter.from_rfc2254( "(& (uid!=george* ) (mail=*))" )
 		Net::LDAP::Filter.from_rfc2254( "(| (uid!=george* ) (mail=*))" )
 		Net::LDAP::Filter.from_rfc2254( "(! (mail=*))" )
-		Net::LDAP::Filter.from_rfc2254( "member=cn=foo,ou=bar,dc=quux,dc=tld" )
 	end
 
 	def test_filters_from_ber
@@ -42,7 +41,6 @@ class TestFilter < Test::Unit::TestCase
 			Net::LDAP::Filter.eq( "objectclass", "aaa*" ),
 			Net::LDAP::Filter.eq( "objectclass", "aaa*bbb*" ),
 			Net::LDAP::Filter.eq( "objectclass", "aaa*bbb*ccc*" ),
-			Net::LDAP::Filter.eq( "member", "cn=foo,ou=bar,dc=quux,dc=tld" ),
 		].each {|ber|
 			f = Net::LDAP::Filter.parse_ber( ber.to_ber.read_ber( Net::LDAP::AsnSyntax) )
 			assert( f == ber )
@@ -75,7 +73,6 @@ class TestFilter < Test::Unit::TestCase
 			Net::LDAP::Filter.construct("objectclass=aaa*"),
 			Net::LDAP::Filter.construct("objectclass=aaa*bbb*"),
 			Net::LDAP::Filter.construct("objectclass=aaa*bbb*ccc*"),
-			Net::LDAP::Filter.construct("member=cn=foo,ou=bar,dc=quux,dc=tld"),
 		].each {|ber|
 			f = Net::LDAP::Filter.parse_ber( ber.to_ber.read_ber( Net::LDAP::AsnSyntax) )
 			assert( f == ber )

@@ -15,6 +15,7 @@
 # See Net::LDAP for documentation and usage samples.
 #
 
+
 require 'socket'
 require 'ostruct'
 
@@ -31,22 +32,24 @@ require 'net/ldap/dataset'
 require 'net/ldap/psw'
 require 'net/ldap/entry'
 
+
 module Net
 
 
   # == Net::LDAP
   #
-  # This library provides a pure-Ruby implementation of the LDAP client
-  # protocol, per RFC-2251.  It can be used to access any server which
-  # implements the LDAP protocol.
+  # This library provides a pure-Ruby implementation of the
+  # LDAP client protocol, per RFC-2251.
+  # It can be used to access any server which implements the
+  # LDAP protocol.
   #
-  # Net::LDAP is intended to provide full LDAP functionality while
-  # hiding the more arcane aspects the LDAP protocol itself, and thus
-  # presenting as Ruby-like a programming interface as possible.
+  # Net::LDAP is intended to provide full LDAP functionality
+  # while hiding the more arcane aspects
+  # the LDAP protocol itself, and thus presenting as Ruby-like
+  # a programming interface as possible.
   # 
   # == Quick-start for the Impatient
-  #
-  # === Quick example of user authentication against an LDAP directory:
+  # === Quick Example of a user-authentication against an LDAP directory:
   #
   #  require 'rubygems'
   #  require 'net/ldap'
@@ -61,39 +64,19 @@ module Net
   #    # authentication failed
   #  end
   #
-  # === Quick example of user authentication against an LDAP directory using SSL:
   #
-  #  require 'rubygems'
-  #  require 'net/ldap'
-  #
-  #  ldap = Net::LDAP.new
-  #    :host => server_ip_address,
-  #    :port => 636,
-  #    :encryption => { :method => :simple_tls },
-  #    :auth => {
-  #      :method => :simple,
-  #      :username => "cn=manager,dc=example,dc=com",
-  #      :password => "opensesame"
-  #    }
-  #  
-  #  if ldap.bind
-  #    # authentication succeeded
-  #  else
-  #    # authentication failed
-  #  end
-  #
-  # === Quick example of a search against an LDAP directory:
+  # === Quick Example of a search against an LDAP directory:
   #
   #  require 'rubygems'
   #  require 'net/ldap'
   #  
   #  ldap = Net::LDAP.new :host => server_ip_address,
-  #    :port => 389,
-  #    :auth => {
-  #      :method => :simple,
-  #      :username => "cn=manager,dc=example,dc=com",
-  #      :password => "opensesame"
-  #    }
+  #       :port => 389,
+  #       :auth => {
+  #             :method => :simple,
+  #             :username => "cn=manager,dc=example,dc=com",
+  #             :password => "opensesame"
+  #       }
   #
   #  filter = Net::LDAP::Filter.eq( "cn", "George*" )
   #  treebase = "dc=example,dc=com"
@@ -109,6 +92,7 @@ module Net
   #  end
   #  
   #  p ldap.get_operation_result
+  #  
   #
   # == A Brief Introduction to LDAP
   #
@@ -131,6 +115,7 @@ module Net
   # but also very often about such items as printers, computers, and other
   # resources. To reflect this, LDAP uses the term <i>entity,</i> or less
   # commonly, <i>principal,</i> to denote its basic data-storage unit.
+  # 
   #
   # === Distinguished Names
   # In LDAP's view of the world,
@@ -148,6 +133,7 @@ module Net
   # a set of criteria that you supply.
   #
   # === Attributes
+  #
   # In the LDAP view of the world, a DN uniquely identifies an entity.
   # Information about the entity is stored as a set of <i>Attributes.</i>
   # An attribute is a text string which is associated with zero or more
@@ -167,6 +153,7 @@ module Net
   # predates the invention of the term <i>email.</i>) <tt>mail</tt> differs
   # from <tt>sn</tt> in that most directories permit any number of values for the
   # <tt>mail</tt> attribute, including zero.
+  #
   #
   # === Tree-Base
   # We said above that X.400 Distinguished Names are <i>globally unique.</i>
@@ -271,11 +258,13 @@ module Net
   # to the server and then keeps it open while it executes a user-supplied block. Net::LDAP#open
   # closes the connection on completion of the block.
   #
+
   class LDAP
 
     class LdapError < StandardError; end
 
-    VERSION = "0.0.5.rc1"
+    VERSION = "0.0.5"
+
 
     SearchScope_BaseObject = 0
     SearchScope_SingleLevel = 1
@@ -1545,7 +1534,7 @@ module Net
         # TODO, fix the following line, which gives a bogus error
         # if the opcode is invalid.
         op_1 = {:add => 0, :delete => 1, :replace => 2} [op.to_sym].to_ber_enumerated
-        modify_ops << [op_1, [attr.to_s.to_ber, [*values].map {|v| v.to_ber}.to_ber_set].to_ber_sequence].to_ber_sequence
+        modify_ops << [op_1, [attr.to_s.to_ber, values.to_a.map {|v| v.to_ber}.to_ber_set].to_ber_sequence].to_ber_sequence
       }
 
       request = [modify_dn.to_ber, modify_ops.to_ber_sequence].to_ber_appsequence(6)
@@ -1553,7 +1542,7 @@ module Net
       @conn.write pkt
 
       (be = @conn.read_ber(AsnSyntax)) && (pdu = LdapPdu.new( be )) && (pdu.app_tag == 7) or raise LdapError.new( "response missing or invalid" )
-      pdu.result_code
+      pdu.result
     end
 
 
@@ -1569,7 +1558,7 @@ module Net
       add_dn = args[:dn] or raise LdapError.new("Unable to add empty DN")
       add_attrs = []
       a = args[:attributes] and a.each {|k,v|
-        add_attrs << [ k.to_s.to_ber, [*v].map {|m| m.to_ber}.to_ber_set ].to_ber_sequence
+        add_attrs << [ k.to_s.to_ber, v.to_a.map {|m| m.to_ber}.to_ber_set ].to_ber_sequence
       }
 
       request = [add_dn.to_ber, add_attrs.to_ber_sequence].to_ber_appsequence(8)
@@ -1577,7 +1566,7 @@ module Net
       @conn.write pkt
 
       (be = @conn.read_ber(AsnSyntax)) && (pdu = LdapPdu.new( be )) && (pdu.app_tag == 9) or raise LdapError.new( "response missing or invalid" )
-      pdu.result_code
+      pdu.result
     end
 
 
