@@ -331,7 +331,7 @@ module Net
       2 => "Protocol Error",
       3 => "Time Limit Exceeded",
       4 => "Size Limit Exceeded",
-      12 => "Unavailable crtical extension",
+      12 => "Unavailable critical extension",
       14 => "saslBindInProgress",
       16 => "No Such Attribute",
       17 => "Undefined Attribute Type",
